@@ -5,19 +5,10 @@
 //  Created by yochidros on 3/11/23.
 //
 
+import AVFoundation
 import Foundation
 import Speech
-import AVFoundation
 
-struct Message: Hashable, Sendable {
-    let id: String
-    let role: String
-    let message: String
-
-    var isAssistant: Bool {
-        return role == "assistant"
-    }
-}
 @MainActor class SpeechRecognizerViewModel: NSObject, ObservableObject {
     @Published var isEnabled: Bool = false
     @Published var isRecoring: Bool = false
@@ -25,6 +16,7 @@ struct Message: Hashable, Sendable {
     @Published var isAudioEnabled: Bool = false
     @Published var isRecognitionEnabled: Bool = false
 
+    @Published var lastItemId: String?
     @Published var isSending: Bool = false
     @Published var messages: [Message] = []
 
@@ -35,12 +27,13 @@ struct Message: Hashable, Sendable {
     private let synthesizer = AVSpeechSynthesizer()
     init(recognizer: SFSpeechRecognizer) {
         self.recognizer = recognizer
-        self.recoder = .init()
-        self.isEnabled = recognizer.isAvailable
+        recoder = .init()
+        isEnabled = recognizer.isAvailable
         super.init()
         self.recognizer.delegate = self
         checkPermission()
     }
+
     func checkPermission() {
         if case .authorized = AVCaptureDevice.authorizationStatus(for: .audio) {
             self.isAudioEnabled = true
@@ -48,7 +41,7 @@ struct Message: Hashable, Sendable {
         if case .authorized = SFSpeechRecognizer.authorizationStatus() {
             self.isRecognitionEnabled = true
         }
-        self.isEnabled = isAudioEnabled && isRecognitionEnabled
+        isEnabled = isAudioEnabled && isRecognitionEnabled
     }
 
     func requestPermission() {
@@ -67,25 +60,42 @@ struct Message: Hashable, Sendable {
             self?.checkPermission()
         }
     }
+
     func speak(message: String) {
+        synthesizer.stopSpeaking(at: .immediate)
         let utterance = AVSpeechUtterance(string: message)
         let voice = AVSpeechSynthesisVoice(language: "en-US")
         utterance.voice = voice
         utterance.volume = 1.0
-        synthesizer.delegate = self
         synthesizer.speak(utterance)
-        synthesizer.continueSpeaking()
     }
 
+    #if DEBUG
+        func debugSend() {
+            let text = """
+            I went to the shopping mall to buy a movie ticket, even though the movie was not yet released in our country. The movie, called 'Detective Conan', is scheduled to be released this April. I believe it has a serious plot, so I'm excited to watch it as soon as possible.
+            """
+            let m = Message(
+                id: UUID().uuidString.lowercased(),
+                role: Bool.random() ? "user" : "assistant",
+                message: text
+            )
+            messages.append(m)
+            speak(message: m.message)
+            lastItemId = m.id
+        }
+    #endif
+
     func send() {
+        synthesizer.stopSpeaking(at: .immediate)
         let m = Message(
             id: UUID().uuidString.lowercased(),
             role: "user",
             message: text
         )
         self.messages.append(m)
-        let messages = self.messages.map({ ($0.role, $0.message) })
-        self.isSending = true
+        let messages = self.messages.map { ($0.role, $0.message) }
+        isSending = true
         Task { @MainActor [weak self] in
             do {
                 let res = try await ChatGPTClient.postMessage(messages: messages)
@@ -108,7 +118,7 @@ struct Message: Hashable, Sendable {
         let request = SFSpeechAudioBufferRecognitionRequest()
         request.shouldReportPartialResults = true
         recoder.prepare(request: request)
-        self.task = recognizer.recognitionTask(with: request) { [weak self] result, err in
+        task = recognizer.recognitionTask(with: request) { [weak self] result, err in
             var isFinal = false
             if let result {
                 isFinal = result.isFinal
@@ -120,33 +130,19 @@ struct Message: Hashable, Sendable {
                 self?.task = nil
             }
         }
-        self.isRecoring = true
+        isRecoring = true
     }
+
     func stop() {
-        self.task?.finish()
-        self.isRecoring = false
+        task?.finish()
+        isRecoring = false
     }
 }
+
 extension SpeechRecognizerViewModel: SFSpeechRecognizerDelegate {
-    func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
-        self.isEnabled = available
+    func speechRecognizer(_: SFSpeechRecognizer, availabilityDidChange available: Bool) {
+        isEnabled = available
     }
 }
-extension SpeechRecognizerViewModel: AVSpeechSynthesizerDelegate {
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didPause utterance: AVSpeechUtterance) {
-    }
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didContinue utterance: AVSpeechUtterance) {
-    }
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange, utterance: AVSpeechUtterance) {
-        print(utterance)
-    }
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        print(utterance)
-    }
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        print(utterance)
-    }
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
-        print(utterance)
-    }
-}
+
+extension SpeechRecognizerViewModel: AVSpeechSynthesizerDelegate {}

@@ -5,8 +5,8 @@
 //  Created by yochidros on 3/11/23.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 import Speech
 
 final class AudioRecoder {
@@ -14,35 +14,50 @@ final class AudioRecoder {
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var inputNode: AVAudioInputNode?
 
-    init() {
-    }
+    #if os(iOS)
+        private var previousCategory: AVAudioSession.Category?
+    #endif
+    init() {}
 
     func stop() {
         audioEngine.stop()
         inputNode?.removeTap(onBus: 0)
         inputNode = nil
         recognitionRequest = nil
+        #if os(iOS)
+            let session = AVAudioSession.sharedInstance()
+            do {
+                if let previousCategory {
+                    try session.setCategory(previousCategory)
+                }
+                try session.setActive(false)
+                previousCategory = nil
+            } catch {
+                print("error: \(error)")
+            }
+        #endif
     }
 
     func prepare(request: SFSpeechAudioBufferRecognitionRequest) {
         #if os(iOS)
-        let session = AVAudioSession.sharedInstance()
-        do {
-            try session.setCategory(.record, mode: .measurement, options: .duckOthers)
-            try session.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch {
-            print("error: \(error)")
-        }
+            let session = AVAudioSession.sharedInstance()
+            previousCategory = session.category
+            do {
+                try session.setCategory(.record, mode: .measurement, options: .duckOthers)
+                try session.setActive(true, options: .notifyOthersOnDeactivation)
+            } catch {
+                print("error: \(error)")
+            }
         #endif
         #if targetEnvironment(simulator)
-        return
+            return
         #endif
 
         let _inputNode = audioEngine.inputNode
         inputNode = _inputNode
-        self.recognitionRequest = request
+        recognitionRequest = request
         let recordingFormat = _inputNode.outputFormat(forBus: 0)
-        _inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
+        _inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, _: AVAudioTime) in
             self.recognitionRequest?.append(buffer)
         }
         audioEngine.prepare()
