@@ -11,7 +11,9 @@ import SwiftUI
 struct ChatGPTConversationApp: App {
     var body: some Scene {
         WindowGroup {
-            SpeechView()
+            SpeechView(viewModel: .init(
+                recognizer: .init(locale: .init(identifier: "en-US"))!
+            ))
         }
     }
 }

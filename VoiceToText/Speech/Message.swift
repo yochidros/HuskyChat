@@ -16,3 +16,15 @@ struct Message: Hashable, Sendable {
         return role == "assistant"
     }
 }
+
+extension String {
+    static var uuid: String {
+        UUID().uuidString.lowercased()
+    }
+}
+
+extension Message {
+    static func makeUser(message: String) -> Self {
+        .init(id: .uuid, role: "user", message: message)
+    }
+}

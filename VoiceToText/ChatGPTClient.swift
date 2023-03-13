@@ -44,7 +44,20 @@ struct ChatMessage: Codable {
 struct ChatMessageResponse: Decodable {
     let id: String
     let created: Int
+    let usage: ChatUsageResponse
     let choices: [ChatMessageChoiceResponse]
+}
+
+struct ChatUsageResponse: Decodable {
+    let promptTokens: Int
+    let completionTokens: Int
+    let totalTokens: Int
+
+    enum CodingKeys: String, CodingKey {
+        case promptTokens = "prompt_tokens"
+        case completionTokens = "completion_tokens"
+        case totalTokens = "total_tokens"
+    }
 }
 
 struct ChatMessageChoiceResponse: Decodable {

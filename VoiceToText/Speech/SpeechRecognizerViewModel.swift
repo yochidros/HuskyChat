@@ -19,18 +19,23 @@ import Speech
     @Published var lastItemId: String?
     @Published var isSending: Bool = false
     @Published var messages: [Message] = []
+    @Published var totalToken: Int = 0
 
     private let recognizer: SFSpeechRecognizer
     private let recoder: AudioRecoder
     private var task: SFSpeechRecognitionTask?
 
     private let synthesizer = AVSpeechSynthesizer()
+    #if os(iOS)
+        private var previousCategory: AVAudioSession.Category?
+    #endif
     init(recognizer: SFSpeechRecognizer) {
         self.recognizer = recognizer
         recoder = .init()
         isEnabled = recognizer.isAvailable
         super.init()
         self.recognizer.delegate = self
+        synthesizer.delegate = self
         checkPermission()
     }
 
@@ -88,13 +93,10 @@ import Speech
 
     func send() {
         synthesizer.stopSpeaking(at: .immediate)
-        let m = Message(
-            id: UUID().uuidString.lowercased(),
-            role: "user",
-            message: text
-        )
+        let m = Message.makeUser(message: text)
         self.messages.append(m)
         let messages = self.messages.map { ($0.role, $0.message) }
+        text = ""
         isSending = true
         Task { @MainActor [weak self] in
             do {
@@ -104,6 +106,7 @@ import Speech
                     return
                 }
                 let chatM = Message(id: res.id, role: r.message.role, message: r.message.content)
+                self?.totalToken += res.usage.totalTokens
                 self?.messages.append(chatM)
                 self?.speak(message: r.message.content)
             } catch {
@@ -145,4 +148,20 @@ extension SpeechRecognizerViewModel: SFSpeechRecognizerDelegate {
     }
 }
 
-extension SpeechRecognizerViewModel: AVSpeechSynthesizerDelegate {}
+extension SpeechRecognizerViewModel: AVSpeechSynthesizerDelegate {
+    func speechSynthesizer(_: AVSpeechSynthesizer, didStart _: AVSpeechUtterance) {
+        #if os(iOS)
+            previousCategory = AVAudioSession.sharedInstance().category
+            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .voicePrompt)
+        #endif
+    }
+
+    func speechSynthesizer(_: AVSpeechSynthesizer, didFinish _: AVSpeechUtterance) {
+        #if os(iOS)
+            if let previousCategory {
+                try? AVAudioSession.sharedInstance().setCategory(previousCategory)
+                self.previousCategory = nil
+            }
+        #endif
+    }
+}
