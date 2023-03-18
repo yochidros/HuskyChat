@@ -53,12 +53,26 @@ extension AVAuthorizationStatus {
     @Published var isSending: Bool = false
     @Published var messages: [Message] = []
     @Published var totalToken: Int = 0
+    @Published var isRecovery: Bool = false
 
     private let recognizer: SFSpeechRecognizer
     private let recoder: AudioRecoder
     private var task: SFSpeechRecognitionTask?
 
     private let synthesizer = AVSpeechSynthesizer()
+    private var currentUUID: String = .uuid
+    @Published var selectedDate: Date?
+    private let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        return formatter
+    }()
+
+    var currentDateString: String {
+        guard let selectedDate else { return "Today" }
+        return formatter.string(from: selectedDate)
+    }
+
     #if os(iOS)
         private var previousCategory: AVAudioSession.Category?
     #endif
@@ -70,7 +84,13 @@ extension AVAuthorizationStatus {
         self.recognizer.delegate = self
         synthesizer.delegate = self
         checkPermission()
-        messages = [.init(id: .uuid, role: "system", message: "System:\nRecoginition \(SFSpeechRecognizer.authorizationStatus().string)\nAudio \(AVCaptureDevice.authorizationStatus(for: .audio).string)")]
+        reset()
+    }
+
+    private func reset() {
+        currentUUID = .uuid
+        selectedDate = nil
+        messages = [.init(id: .uuid, role: "system", message: "Recoginition \(SFSpeechRecognizer.authorizationStatus().string)\nAudio \(AVCaptureDevice.authorizationStatus(for: .audio).string)")]
     }
 
     func checkPermission() {
@@ -104,26 +124,12 @@ extension AVAuthorizationStatus {
         synthesizer.stopSpeaking(at: .immediate)
         let utterance = AVSpeechUtterance(string: message)
         let voice = AVSpeechSynthesisVoice(language: "en-US")
+        utterance.rate = Float(UserDefaults.standard.double(forKey: "speaker_rate"))
+        utterance.pitchMultiplier = Float(UserDefaults.standard.double(forKey: "speaker_pitch"))
         utterance.voice = voice
         utterance.volume = 1.0
         synthesizer.speak(utterance)
     }
-
-    #if DEBUG
-        func debugSend() {
-            let text = """
-            I went to the shopping mall to buy a movie ticket, even though the movie was not yet released in our country. The movie, called 'Detective Conan', is scheduled to be released this April. I believe it has a serious plot, so I'm excited to watch it as soon as possible.
-            """
-            let m = Message(
-                id: UUID().uuidString.lowercased(),
-                role: Bool.random() ? "user" : "assistant",
-                message: text
-            )
-            messages.append(m)
-            speak(message: m.message)
-            lastItemId = m.id
-        }
-    #endif
 
     func send() {
         synthesizer.stopSpeaking(at: .immediate)
@@ -143,11 +149,31 @@ extension AVAuthorizationStatus {
                 self?.totalToken = Self.addTotalToken(token: res.usage.totalTokens)
                 self?.messages.append(chatM)
                 self?.speak(message: r.message.content)
+                self?.save()
             } catch {
                 self?.isSending = false
                 print(error)
             }
         }
+    }
+
+    func newChat() {
+        reset()
+    }
+
+    func recoveryChat() {
+        isRecovery = true
+    }
+
+    func didSelectedLocalMessage(_ message: LocalMessage) {
+        currentUUID = message.uuid
+        messages = message.messages
+        selectedDate = message.date
+    }
+
+    private func save() {
+        let v = LocalMessage(uuid: currentUUID, messages: messages.filter { $0.role != "system" }, date: Date())
+        LocalMessageManager.add(v)
     }
 
     private static func addTotalToken(token: Int) -> Int {

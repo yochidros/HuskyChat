@@ -14,6 +14,13 @@ import SwiftUI
     @Published var recognitionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
     @AppStorage(wrappedValue: 0, "total_token")
     var totalToken: Int
+
+    @AppStorage(wrappedValue: 0.5, "speaker_rare")
+    var speakerRate: Double
+
+    @AppStorage(wrappedValue: 1.0, "speaker_pitch")
+    var speakerPitch: Double
+
     var totalPrice: Double {
         (Double(totalToken) / 1000) * 0.02
     }
@@ -43,6 +50,11 @@ import SwiftUI
 
     func resetToken() {
         totalToken = 0
+    }
+
+    func resetVoiceConfig() {
+        speakerRate = 0.5
+        speakerPitch = 1.0
     }
 }
 
@@ -79,8 +91,21 @@ struct SettingView: View {
                     Spacer()
                     Text("$\(viewModel.totalPrice)")
                 }
-                Button("Reset", action: {
+                Button("Reset Price Calcurate", action: {
                     viewModel.resetToken()
+                })
+            }
+            Section("Speaker Voice") {
+                HStack {
+                    Text("Rate")
+                    Slider(value: $viewModel.speakerRate, in: 0.1 ... 1.0, step: 0.1)
+                }
+                HStack {
+                    Text("Picth")
+                    Slider(value: $viewModel.speakerPitch, in: 0.5 ... 2.0, step: 0.1)
+                }
+                Button("Reset Voice Config", action: {
+                    viewModel.resetVoiceConfig()
                 })
             }
         }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F20E5B6329C5E0AC0030C1F6 /* RecoveryChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20E5B6229C5E0AC0030C1F6 /* RecoveryChatView.swift */; };
 		F29D12C829BC585C009AA23B /* ChatGPTConversationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D12C729BC585C009AA23B /* ChatGPTConversationApp.swift */; };
 		F29D12CA29BC585C009AA23B /* SpeechView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D12C929BC585C009AA23B /* SpeechView.swift */; };
 		F29D12CC29BC585D009AA23B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F29D12CB29BC585D009AA23B /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F20E5B6229C5E0AC0030C1F6 /* RecoveryChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryChatView.swift; sourceTree = "<group>"; };
 		F29D12C429BC585C009AA23B /* HuskyChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HuskyChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F29D12C729BC585C009AA23B /* ChatGPTConversationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGPTConversationApp.swift; sourceTree = "<group>"; };
 		F29D12C929BC585C009AA23B /* SpeechView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechView.swift; sourceTree = "<group>"; };
@@ -46,6 +48,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F20E5B6129C5E09E0030C1F6 /* RecoveryChat */ = {
+			isa = PBXGroup;
+			children = (
+				F20E5B6229C5E0AC0030C1F6 /* RecoveryChatView.swift */,
+			);
+			path = RecoveryChat;
+			sourceTree = "<group>";
+		};
 		F29D12BB29BC585C009AA23B = {
 			isa = PBXGroup;
 			children = (
@@ -65,6 +75,7 @@
 		F29D12C629BC585C009AA23B /* HuskyChat */ = {
 			isa = PBXGroup;
 			children = (
+				F20E5B6129C5E09E0030C1F6 /* RecoveryChat */,
 				F2B7647629C56DCC00C91369 /* Setting */,
 				F29D12E129BCC4A0009AA23B /* Speech */,
 				F29D12E029BCB619009AA23B /* Info.plist */,
@@ -181,6 +192,7 @@
 				F29D12D729BC6CAE009AA23B /* SpeechRecognizerViewModel.swift in Sources */,
 				F29D12DD29BC6F38009AA23B /* ChatGPTClient.swift in Sources */,
 				F2B7647829C56DE500C91369 /* SettingView.swift in Sources */,
+				F20E5B6329C5E0AC0030C1F6 /* RecoveryChatView.swift in Sources */,
 				F29D12DB29BC6D02009AA23B /* AudioRecorder.swift in Sources */,
 				F29D12E329BCC4CB009AA23B /* Message.swift in Sources */,
 			);
@@ -310,7 +322,7 @@
 				CODE_SIGN_ENTITLEMENTS = HuskyChat/HuskyChat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"HuskyChat/Preview Content\"";
 				DEVELOPMENT_TEAM = X25KZ54NYC;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -347,7 +359,7 @@
 				CODE_SIGN_ENTITLEMENTS = HuskyChat/HuskyChat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"HuskyChat/Preview Content\"";
 				DEVELOPMENT_TEAM = X25KZ54NYC;
 				ENABLE_HARDENED_RUNTIME = YES;

@@ -13,58 +13,83 @@ import SwiftUI
 #endif
 
 @MainActor struct SpeechView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @StateObject var viewModel: SpeechRecognizerViewModel
 
     var body: some View {
-        GeometryReader { proxy in
-            ZStack(alignment: .bottom) {
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        LazyVStack {
-                            ForEach(
-                                viewModel.messages,
-                                id: \.self
-                            ) { message in
-                                MessageView(
-                                    message: message
-                                )
-                                .onChange(of: viewModel.lastItemId ?? "") { _ in
-                                    withAnimation {
-                                        proxy.scrollTo(-1, anchor: .bottom)
+        NavigationStack {
+            GeometryReader { proxy in
+                ZStack(alignment: .bottom) {
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            LazyVStack {
+                                ForEach(
+                                    viewModel.messages,
+                                    id: \.self
+                                ) { message in
+                                    MessageView(
+                                        message: message,
+                                        onTapAssistantMessage: {
+                                            viewModel.speak(message: $0.message)
+                                        }
+                                    )
+                                    .onChange(of: viewModel.lastItemId ?? "") { _ in
+                                        withAnimation {
+                                            proxy.scrollTo(-1, anchor: .bottom)
+                                        }
                                     }
                                 }
+                                Spacer().frame(height: 90)
+                                    .id(-1)
                             }
-                            Spacer().frame(height: 90)
-                                .id(-1)
+                            .padding()
                         }
-                        .padding()
+                        .background(Color.gray.opacity(0.1))
                     }
-                    .background(Color.gray.opacity(0.1))
-                }
 
-                TextInputView(
-                    text: $viewModel.text,
-                    width: proxy.size.width,
-                    font: .body,
-                    isEnabled: viewModel.isEnabled,
-                    isRecording: viewModel.isRecoring,
-                    isSendEnable: !viewModel.text.isEmpty,
-                    isSending: viewModel.isSending,
-                    onSendButton: {
-                        withAnimation {
-                            viewModel.send()
+                    TextInputView(
+                        text: $viewModel.text,
+                        width: proxy.size.width,
+                        font: .body,
+                        isEnabled: viewModel.isEnabled,
+                        isRecording: viewModel.isRecoring,
+                        isSendEnable: !viewModel.text.isEmpty,
+                        isSending: viewModel.isSending,
+                        onSendButton: {
+                            withAnimation {
+                                viewModel.send()
+                            }
+                        },
+                        onTapRecordButton: {
+                            if viewModel.isRecoring {
+                                viewModel.stop()
+                            } else {
+                                viewModel.record()
+                            }
                         }
-                    },
-                    onTapRecordButton: {
-                        if viewModel.isRecoring {
-                            viewModel.stop()
-                        } else {
-                            viewModel.record()
-                        }
-                    }
-                )
+                    )
+                }
             }
+            .navigationTitle(viewModel.currentDateString)
+            .toolbar {
+                Menu(content: {
+                    Button(action: { viewModel.recoveryChat() }, label: {
+                        Label("Recovery", systemImage: "list.bullet.rectangle.portrait")
+                    })
+                    Button(action: { viewModel.newChat() }, label: {
+                        Label("New", systemImage: "plus.app")
+                    })
+                }, label: {
+                    Image(systemName: "note.text")
+                })
+            }
+            .toolbar(.visible, for: .navigationBar)
         }
+        .sheet(isPresented: $viewModel.isRecovery, content: {
+            RecoveryChatViewBuilder.build { message in
+                viewModel.didSelectedLocalMessage(message)
+            }
+        })
     }
 
     struct TextInputView: View {
@@ -130,11 +155,9 @@ import SwiftUI
                         }
                     }, label: {
                         HStack(spacing: 4) {
-                            if !isRecording {
-                                Image(systemName: "mic")
-                                    .imageScale(.medium)
-                                    .foregroundColor(isRecording ? .red : .accentColor)
-                            }
+                            Image(systemName: "mic")
+                                .imageScale(.medium)
+                                .foregroundColor(isRecording ? .red : .blue)
                         }
                         .background(
                             Circle().fill(
@@ -173,7 +196,7 @@ import SwiftUI
                         .frame(height: height)
                         .fontWeight(.bold)
                         .cornerRadius(6)
-                        .padding(.all, 8)
+                        .padding(.horizontal, 8)
                         .overlay {
                             if text.isEmpty {
                                 HStack {
@@ -181,6 +204,7 @@ import SwiftUI
                                         .lineLimit(1)
                                         .foregroundColor(.gray)
                                         .allowsHitTesting(false)
+                                        .padding(.leading, 4)
                                     Spacer()
                                 }
                                 .padding(.horizontal, 12)
@@ -193,6 +217,7 @@ import SwiftUI
                 VStack(spacing: 0) {
                     Button {
                         onSendButton()
+                        UIApplication.shared.endEditing()
                     } label: {
                         if isSending {
                             ProgressView()
@@ -215,34 +240,39 @@ import SwiftUI
                     Spacer(minLength: 0)
                 }
             }
-            .frame(height: height + (textFocused ? 32 : 0))
+            .frame(height: height + (textFocused ? 18 : 0))
             .padding(.vertical, 8)
         }
     }
 
     struct MessageView: View {
         let message: Message
+        let onTapAssistantMessage: (Message) -> Void
 
         @ViewBuilder
         var body: some View {
             HStack {
                 if message.isAssistant {
-                    HStack(alignment: .top, spacing: 6) {
-                        VStack {
-                            Image(systemName: "lasso.and.sparkles")
-                            Spacer()
-                        }
+                    Button(action: { onTapAssistantMessage(message) }, label: {
+                        HStack(alignment: .top, spacing: 6) {
+                            VStack {
+                                Image(systemName: "lasso.and.sparkles")
+                                    .foregroundColor(.black)
+                                Spacer()
+                            }
 
-                        VStack {
-                            Text(message.message)
-                                .font(.body)
-                                .textSelection(.enabled)
-                            Spacer()
+                            VStack {
+                                Text(message.message)
+                                    .foregroundColor(.black)
+                                    .font(.body)
+                                Spacer(minLength: 0)
+                            }
+                            .textSelection(.enabled)
                         }
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(8)
+                        .padding(.all, 8)
+                        .background(Color.white)
+                        .cornerRadius(8)
+                    })
                     Spacer(minLength: 24)
                 } else {
                     Spacer(minLength: 24)
@@ -254,12 +284,12 @@ import SwiftUI
                         VStack {
                             Text(message.message)
                                 .font(.body)
-                                .textSelection(.enabled)
-                            Spacer()
+                            Spacer(minLength: 0)
                         }
+                        .textSelection(.enabled)
                     }
-                    .padding()
-                    .background(Color.green.opacity(0.1))
+                    .padding(.all, 8)
+                    .background(Color.green.opacity(0.8))
                     .cornerRadius(8)
                 }
             }.id(message.id)
