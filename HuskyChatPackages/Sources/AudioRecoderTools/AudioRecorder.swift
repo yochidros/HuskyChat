@@ -9,7 +9,7 @@ import AVFoundation
 import Foundation
 import Speech
 
-final class AudioRecoder {
+public final class AudioRecoder {
     private let audioEngine = AVAudioEngine()
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var inputNode: AVAudioInputNode?
@@ -17,9 +17,9 @@ final class AudioRecoder {
     #if os(iOS)
         private var previousCategory: AVAudioSession.Category?
     #endif
-    init() {}
+    public init() {}
 
-    func stop() {
+    public func stop() {
         audioEngine.stop()
         inputNode?.removeTap(onBus: 0)
         inputNode = nil
@@ -38,7 +38,7 @@ final class AudioRecoder {
         #endif
     }
 
-    func prepare(request: SFSpeechAudioBufferRecognitionRequest) {
+    public func prepare(request: SFSpeechAudioBufferRecognitionRequest) {
         #if os(iOS)
             let session = AVAudioSession.sharedInstance()
             previousCategory = session.category

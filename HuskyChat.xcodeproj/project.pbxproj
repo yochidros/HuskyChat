@@ -7,34 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F20E5B6329C5E0AC0030C1F6 /* RecoveryChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20E5B6229C5E0AC0030C1F6 /* RecoveryChatView.swift */; };
-		F29D12C829BC585C009AA23B /* ChatGPTConversationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D12C729BC585C009AA23B /* ChatGPTConversationApp.swift */; };
-		F29D12CA29BC585C009AA23B /* SpeechView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D12C929BC585C009AA23B /* SpeechView.swift */; };
+		F29D12C829BC585C009AA23B /* HuskyChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D12C729BC585C009AA23B /* HuskyChatApp.swift */; };
 		F29D12CC29BC585D009AA23B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F29D12CB29BC585D009AA23B /* Assets.xcassets */; };
 		F29D12CF29BC585D009AA23B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F29D12CE29BC585D009AA23B /* Preview Assets.xcassets */; };
-		F29D12D729BC6CAE009AA23B /* SpeechRecognizerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D12D629BC6CAE009AA23B /* SpeechRecognizerViewModel.swift */; };
-		F29D12D929BC6CE5009AA23B /* SFSpeechRecognizer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D12D829BC6CE5009AA23B /* SFSpeechRecognizer+Extension.swift */; };
-		F29D12DB29BC6D02009AA23B /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D12DA29BC6D02009AA23B /* AudioRecorder.swift */; };
-		F29D12DD29BC6F38009AA23B /* ChatGPTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D12DC29BC6F38009AA23B /* ChatGPTClient.swift */; };
-		F29D12E329BCC4CB009AA23B /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D12E229BCC4CB009AA23B /* Message.swift */; };
-		F2B7647829C56DE500C91369 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2B7647729C56DE500C91369 /* SettingView.swift */; };
+		F2DCB93329C96C80003D2DDC /* LocalStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F2DCB93229C96C80003D2DDC /* LocalStorage */; };
+		F2DCB93529C96C80003D2DDC /* Message in Frameworks */ = {isa = PBXBuildFile; productRef = F2DCB93429C96C80003D2DDC /* Message */; };
+		F2DCB93729C96C80003D2DDC /* Prelude in Frameworks */ = {isa = PBXBuildFile; productRef = F2DCB93629C96C80003D2DDC /* Prelude */; };
+		F2DCB93929C96C80003D2DDC /* RecoveryChatFeature in Frameworks */ = {isa = PBXBuildFile; productRef = F2DCB93829C96C80003D2DDC /* RecoveryChatFeature */; };
+		F2DCB93B29C96C80003D2DDC /* SettingFeature in Frameworks */ = {isa = PBXBuildFile; productRef = F2DCB93A29C96C80003D2DDC /* SettingFeature */; };
+		F2DCB93D29C971FB003D2DDC /* AudioRecoderTools in Frameworks */ = {isa = PBXBuildFile; productRef = F2DCB93C29C971FB003D2DDC /* AudioRecoderTools */; };
+		F2DCB93F29C971FB003D2DDC /* ChatGPTAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = F2DCB93E29C971FB003D2DDC /* ChatGPTAPIClient */; };
+		F2DCB94129C971FB003D2DDC /* SpeechFeature in Frameworks */ = {isa = PBXBuildFile; productRef = F2DCB94029C971FB003D2DDC /* SpeechFeature */; };
+		F2DCB94329C97949003D2DDC /* FeatureBuilderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DCB94229C97949003D2DDC /* FeatureBuilderImpl.swift */; };
+		F2DCB94529C9799D003D2DDC /* FeatureBuilder in Frameworks */ = {isa = PBXBuildFile; productRef = F2DCB94429C9799D003D2DDC /* FeatureBuilder */; };
+		F2DCB94729C9799D003D2DDC /* RecoveryChatFeatureBuilder in Frameworks */ = {isa = PBXBuildFile; productRef = F2DCB94629C9799D003D2DDC /* RecoveryChatFeatureBuilder */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F20E5B6229C5E0AC0030C1F6 /* RecoveryChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryChatView.swift; sourceTree = "<group>"; };
+		F265895129C96327005C39AF /* HuskyChatPackages */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HuskyChatPackages; sourceTree = "<group>"; };
 		F29D12C429BC585C009AA23B /* HuskyChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HuskyChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F29D12C729BC585C009AA23B /* ChatGPTConversationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGPTConversationApp.swift; sourceTree = "<group>"; };
-		F29D12C929BC585C009AA23B /* SpeechView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechView.swift; sourceTree = "<group>"; };
+		F29D12C729BC585C009AA23B /* HuskyChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HuskyChatApp.swift; sourceTree = "<group>"; };
 		F29D12CB29BC585D009AA23B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F29D12CE29BC585D009AA23B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F29D12D029BC585D009AA23B /* HuskyChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HuskyChat.entitlements; sourceTree = "<group>"; };
-		F29D12D629BC6CAE009AA23B /* SpeechRecognizerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerViewModel.swift; sourceTree = "<group>"; };
-		F29D12D829BC6CE5009AA23B /* SFSpeechRecognizer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SFSpeechRecognizer+Extension.swift"; sourceTree = "<group>"; };
-		F29D12DA29BC6D02009AA23B /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
-		F29D12DC29BC6F38009AA23B /* ChatGPTClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGPTClient.swift; sourceTree = "<group>"; };
 		F29D12E029BCB619009AA23B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		F29D12E229BCC4CB009AA23B /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		F2B7647729C56DE500C91369 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		F2DCB94229C97949003D2DDC /* FeatureBuilderImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureBuilderImpl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,25 +39,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2DCB93729C96C80003D2DDC /* Prelude in Frameworks */,
+				F2DCB94129C971FB003D2DDC /* SpeechFeature in Frameworks */,
+				F2DCB93529C96C80003D2DDC /* Message in Frameworks */,
+				F2DCB93D29C971FB003D2DDC /* AudioRecoderTools in Frameworks */,
+				F2DCB94529C9799D003D2DDC /* FeatureBuilder in Frameworks */,
+				F2DCB93929C96C80003D2DDC /* RecoveryChatFeature in Frameworks */,
+				F2DCB93329C96C80003D2DDC /* LocalStorage in Frameworks */,
+				F2DCB93B29C96C80003D2DDC /* SettingFeature in Frameworks */,
+				F2DCB94729C9799D003D2DDC /* RecoveryChatFeatureBuilder in Frameworks */,
+				F2DCB93F29C971FB003D2DDC /* ChatGPTAPIClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F20E5B6129C5E09E0030C1F6 /* RecoveryChat */ = {
-			isa = PBXGroup;
-			children = (
-				F20E5B6229C5E0AC0030C1F6 /* RecoveryChatView.swift */,
-			);
-			path = RecoveryChat;
-			sourceTree = "<group>";
-		};
 		F29D12BB29BC585C009AA23B = {
 			isa = PBXGroup;
 			children = (
+				F2C32F4F29C96180004B6C35 /* Packages */,
 				F29D12C629BC585C009AA23B /* HuskyChat */,
 				F29D12C529BC585C009AA23B /* Products */,
+				F2DCB93129C96C80003D2DDC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,17 +76,12 @@
 		F29D12C629BC585C009AA23B /* HuskyChat */ = {
 			isa = PBXGroup;
 			children = (
-				F20E5B6129C5E09E0030C1F6 /* RecoveryChat */,
-				F2B7647629C56DCC00C91369 /* Setting */,
-				F29D12E129BCC4A0009AA23B /* Speech */,
 				F29D12E029BCB619009AA23B /* Info.plist */,
-				F29D12C729BC585C009AA23B /* ChatGPTConversationApp.swift */,
+				F29D12C729BC585C009AA23B /* HuskyChatApp.swift */,
 				F29D12CB29BC585D009AA23B /* Assets.xcassets */,
 				F29D12D029BC585D009AA23B /* HuskyChat.entitlements */,
 				F29D12CD29BC585D009AA23B /* Preview Content */,
-				F29D12D829BC6CE5009AA23B /* SFSpeechRecognizer+Extension.swift */,
-				F29D12DA29BC6D02009AA23B /* AudioRecorder.swift */,
-				F29D12DC29BC6F38009AA23B /* ChatGPTClient.swift */,
+				F2DCB94229C97949003D2DDC /* FeatureBuilderImpl.swift */,
 			);
 			path = HuskyChat;
 			sourceTree = "<group>";
@@ -98,22 +94,19 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		F29D12E129BCC4A0009AA23B /* Speech */ = {
+		F2C32F4F29C96180004B6C35 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				F29D12D629BC6CAE009AA23B /* SpeechRecognizerViewModel.swift */,
-				F29D12C929BC585C009AA23B /* SpeechView.swift */,
-				F29D12E229BCC4CB009AA23B /* Message.swift */,
+				F265895129C96327005C39AF /* HuskyChatPackages */,
 			);
-			path = Speech;
+			name = Packages;
 			sourceTree = "<group>";
 		};
-		F2B7647629C56DCC00C91369 /* Setting */ = {
+		F2DCB93129C96C80003D2DDC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F2B7647729C56DE500C91369 /* SettingView.swift */,
 			);
-			path = Setting;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -132,6 +125,18 @@
 			dependencies = (
 			);
 			name = HuskyChat;
+			packageProductDependencies = (
+				F2DCB93229C96C80003D2DDC /* LocalStorage */,
+				F2DCB93429C96C80003D2DDC /* Message */,
+				F2DCB93629C96C80003D2DDC /* Prelude */,
+				F2DCB93829C96C80003D2DDC /* RecoveryChatFeature */,
+				F2DCB93A29C96C80003D2DDC /* SettingFeature */,
+				F2DCB93C29C971FB003D2DDC /* AudioRecoderTools */,
+				F2DCB93E29C971FB003D2DDC /* ChatGPTAPIClient */,
+				F2DCB94029C971FB003D2DDC /* SpeechFeature */,
+				F2DCB94429C9799D003D2DDC /* FeatureBuilder */,
+				F2DCB94629C9799D003D2DDC /* RecoveryChatFeatureBuilder */,
+			);
 			productName = VoiceToText;
 			productReference = F29D12C429BC585C009AA23B /* HuskyChat.app */;
 			productType = "com.apple.product-type.application";
@@ -186,15 +191,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F29D12CA29BC585C009AA23B /* SpeechView.swift in Sources */,
-				F29D12C829BC585C009AA23B /* ChatGPTConversationApp.swift in Sources */,
-				F29D12D929BC6CE5009AA23B /* SFSpeechRecognizer+Extension.swift in Sources */,
-				F29D12D729BC6CAE009AA23B /* SpeechRecognizerViewModel.swift in Sources */,
-				F29D12DD29BC6F38009AA23B /* ChatGPTClient.swift in Sources */,
-				F2B7647829C56DE500C91369 /* SettingView.swift in Sources */,
-				F20E5B6329C5E0AC0030C1F6 /* RecoveryChatView.swift in Sources */,
-				F29D12DB29BC6D02009AA23B /* AudioRecorder.swift in Sources */,
-				F29D12E329BCC4CB009AA23B /* Message.swift in Sources */,
+				F2DCB94329C97949003D2DDC /* FeatureBuilderImpl.swift in Sources */,
+				F29D12C829BC585C009AA23B /* HuskyChatApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +408,49 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F2DCB93229C96C80003D2DDC /* LocalStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LocalStorage;
+		};
+		F2DCB93429C96C80003D2DDC /* Message */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Message;
+		};
+		F2DCB93629C96C80003D2DDC /* Prelude */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Prelude;
+		};
+		F2DCB93829C96C80003D2DDC /* RecoveryChatFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RecoveryChatFeature;
+		};
+		F2DCB93A29C96C80003D2DDC /* SettingFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SettingFeature;
+		};
+		F2DCB93C29C971FB003D2DDC /* AudioRecoderTools */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AudioRecoderTools;
+		};
+		F2DCB93E29C971FB003D2DDC /* ChatGPTAPIClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ChatGPTAPIClient;
+		};
+		F2DCB94029C971FB003D2DDC /* SpeechFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpeechFeature;
+		};
+		F2DCB94429C9799D003D2DDC /* FeatureBuilder */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FeatureBuilder;
+		};
+		F2DCB94629C9799D003D2DDC /* RecoveryChatFeatureBuilder */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RecoveryChatFeatureBuilder;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F29D12BC29BC585C009AA23B /* Project object */;
 }

@@ -5,6 +5,9 @@
 //  Created by yochidros on 3/11/23.
 //
 
+import FeatureBuilder
+import Message
+import RecoveryChatFeatureBuilder
 import SwiftUI
 #if canImport(UIKit)
     import UIKit
@@ -12,11 +15,19 @@ import SwiftUI
     import AppKit
 #endif
 
-@MainActor struct SpeechView: View {
+@MainActor public struct SpeechView: View {
     @Environment(\.colorScheme) private var colorScheme
     @StateObject var viewModel: SpeechRecognizerViewModel
+    private let featureBuilder: FeatureBuilderProtocol
+    public init(
+        viewModel: SpeechRecognizerViewModel,
+        featureBuilder: FeatureBuilderProtocol
+    ) {
+        _viewModel = .init(wrappedValue: viewModel)
+        self.featureBuilder = featureBuilder
+    }
 
-    var body: some View {
+    public var body: some View {
         NavigationStack {
             GeometryReader { proxy in
                 ZStack(alignment: .bottom) {
@@ -86,9 +97,9 @@ import SwiftUI
             .toolbar(.visible, for: .navigationBar)
         }
         .sheet(isPresented: $viewModel.isRecovery, content: {
-            RecoveryChatViewBuilder.build { message in
+            featureBuilder.build(request: RecoveryChatFeatureRequest(completion: { message in
                 viewModel.didSelectedLocalMessage(message)
-            }
+            }))
         })
     }
 
@@ -300,15 +311,16 @@ import SwiftUI
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        SpeechView(
-            viewModel: .init(
-                recognizer: .init(locale: .init(identifier: "en-US"))!
-            )
-        )
-    }
-}
+//
+// struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SpeechView(
+//            viewModel: .init(
+//                recognizer: .init(locale: .init(identifier: "en-US"))!
+//            )
+//        )
+//    }
+// }
 
 #if canImport(UIKit)
     extension Font {

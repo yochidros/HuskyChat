@@ -7,7 +7,7 @@
 
 import Speech
 
-extension SFSpeechRecognizer {
+public extension SFSpeechRecognizer {
     static func requestAuthorizationAsync() async -> SFSpeechRecognizerAuthorizationStatus {
         await withCheckedContinuation { continuation in
             SFSpeechRecognizer.requestAuthorization { status in

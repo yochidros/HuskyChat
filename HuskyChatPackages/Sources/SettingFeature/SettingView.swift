@@ -1,66 +1,15 @@
 //
-//  SettingView.swift
-//  VoiceToText
-//
-//  Created by yochidros on 3/18/23.
+//  Created by yochidros on 3/21/23
 //
 
-import AVFoundation
-import Speech
+import Foundation
+import Prelude
 import SwiftUI
 
-@MainActor class SettingViewModel: ObservableObject {
-    @Published var audioStatus: AVAuthorizationStatus = .notDetermined
-    @Published var recognitionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
-    @AppStorage(wrappedValue: 0, "total_token")
-    var totalToken: Int
-
-    @AppStorage(wrappedValue: 0.5, "speaker_rate")
-    var speakerRate: Double
-
-    @AppStorage(wrappedValue: 1.0, "speaker_pitch")
-    var speakerPitch: Double
-
-    var totalPrice: Double {
-        (Double(totalToken) / 1000) * 0.02
-    }
-
-    init() {
-        checkPermission()
-    }
-
-    func onAppear() {
-        checkPermission()
-    }
-
-    func checkPermission() {
-        audioStatus = AVCaptureDevice.authorizationStatus(for: .audio)
-        recognitionStatus = SFSpeechRecognizer.authorizationStatus()
-    }
-
-    func requestPermission() {
-        Task { @MainActor [weak self] in
-            let granted = await AVCaptureDevice.requestAccess(for: .audio)
-            self?.audioStatus = granted ? .authorized : .denied
-            let status = await SFSpeechRecognizer.requestAuthorizationAsync()
-            self?.recognitionStatus = status
-            self?.checkPermission()
-        }
-    }
-
-    func resetToken() {
-        totalToken = 0
-    }
-
-    func resetVoiceConfig() {
-        speakerRate = 0.5
-        speakerPitch = 1.0
-    }
-}
-
-struct SettingView: View {
+public struct SettingView: View {
     @StateObject var viewModel: SettingViewModel = .init()
-    var body: some View {
+    public init() {}
+    public var body: some View {
         List {
             Section("Permission") {
                 HStack {
@@ -77,6 +26,12 @@ struct SettingView: View {
                     viewModel.requestPermission()
                 })
                 .disabled(!(viewModel.recognitionStatus == .notDetermined && viewModel.audioStatus == .notDetermined))
+            }
+            Section("API Key") {
+                SecureField("", text: $viewModel.apiKey)
+                Button("hide keyboard", action: {
+                    UIApplication.shared.endEditing()
+                })
             }
             Section("Current Price") {
                 HStack {

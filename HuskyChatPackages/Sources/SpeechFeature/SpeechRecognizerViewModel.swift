@@ -5,44 +5,16 @@
 //  Created by yochidros on 3/11/23.
 //
 
+import AudioRecoderTools
 import AVFoundation
+import ChatGPTAPIClient
 import Foundation
+import LocalStorage
+import Message
+import Prelude
 import Speech
-extension SFSpeechRecognizerAuthorizationStatus {
-    var string: String {
-        switch self {
-        case .notDetermined:
-            return "not determined"
-        case .denied:
-            return "denied"
-        case .restricted:
-            return "restricted"
-        case .authorized:
-            return "authorized"
-        @unknown default:
-            fatalError()
-        }
-    }
-}
 
-extension AVAuthorizationStatus {
-    var string: String {
-        switch self {
-        case .notDetermined:
-            return "not determined"
-        case .denied:
-            return "denied"
-        case .restricted:
-            return "restricted"
-        case .authorized:
-            return "authorized"
-        @unknown default:
-            fatalError()
-        }
-    }
-}
-
-@MainActor class SpeechRecognizerViewModel: NSObject, ObservableObject {
+@MainActor public class SpeechRecognizerViewModel: NSObject, ObservableObject {
     @Published var isEnabled: Bool = false
     @Published var isRecoring: Bool = false
     @Published var text: String = ""
@@ -62,21 +34,16 @@ extension AVAuthorizationStatus {
     private let synthesizer = AVSpeechSynthesizer()
     private var currentUUID: String = .uuid
     @Published var selectedDate: Date?
-    private let formatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        return formatter
-    }()
 
     var currentDateString: String {
         guard let selectedDate else { return "Today" }
-        return formatter.string(from: selectedDate)
+        return DateFormatter.default.string(from: selectedDate)
     }
 
     #if os(iOS)
         private var previousCategory: AVAudioSession.Category?
     #endif
-    init(recognizer: SFSpeechRecognizer) {
+    public init(recognizer: SFSpeechRecognizer) {
         self.recognizer = recognizer
         recoder = .init()
         isEnabled = recognizer.isAvailable
@@ -124,8 +91,8 @@ extension AVAuthorizationStatus {
         synthesizer.stopSpeaking(at: .immediate)
         let utterance = AVSpeechUtterance(string: message)
         let voice = AVSpeechSynthesisVoice(language: "en-US")
-        utterance.rate = Float(UserDefaults.standard.double(forKey: "speaker_rate"))
-        utterance.pitchMultiplier = Float(UserDefaults.standard.double(forKey: "speaker_pitch"))
+        utterance.rate = Float(UserDefaults.standard.double(forKey: UDKeys.speakerRate))
+        utterance.pitchMultiplier = Float(UserDefaults.standard.double(forKey: UDKeys.speakerPitch))
         utterance.voice = voice
         utterance.volume = 1.0
         synthesizer.speak(utterance)
@@ -173,12 +140,14 @@ extension AVAuthorizationStatus {
 
     private func save() {
         let v = LocalMessage(uuid: currentUUID, messages: messages.filter { $0.role != "system" }, date: Date())
-        LocalMessageManager.add(v)
+        LocalStorageManager.upsert(v, key: UDKeys.localMessage) { base, v in
+            base.uuid == v.uuid
+        }
     }
 
     private static func addTotalToken(token: Int) -> Int {
-        let current = UserDefaults.standard.integer(forKey: "total_token")
-        UserDefaults.standard.set(current + token, forKey: "total_token")
+        let current = UserDefaults.standard.integer(forKey: UDKeys.totalToken)
+        UserDefaults.standard.set(current + token, forKey: UDKeys.totalToken)
         return current + token
     }
 
@@ -209,20 +178,20 @@ extension AVAuthorizationStatus {
 }
 
 extension SpeechRecognizerViewModel: SFSpeechRecognizerDelegate {
-    func speechRecognizer(_: SFSpeechRecognizer, availabilityDidChange available: Bool) {
+    public func speechRecognizer(_: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         isEnabled = available
     }
 }
 
 extension SpeechRecognizerViewModel: AVSpeechSynthesizerDelegate {
-    func speechSynthesizer(_: AVSpeechSynthesizer, didStart _: AVSpeechUtterance) {
+    public func speechSynthesizer(_: AVSpeechSynthesizer, didStart _: AVSpeechUtterance) {
         #if os(iOS)
             previousCategory = AVAudioSession.sharedInstance().category
             try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .voicePrompt)
         #endif
     }
 
-    func speechSynthesizer(_: AVSpeechSynthesizer, didFinish _: AVSpeechUtterance) {
+    public func speechSynthesizer(_: AVSpeechSynthesizer, didFinish _: AVSpeechUtterance) {
         #if os(iOS)
             if let previousCategory {
                 try? AVAudioSession.sharedInstance().setCategory(previousCategory)
