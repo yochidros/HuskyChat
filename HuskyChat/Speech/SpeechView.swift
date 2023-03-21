@@ -242,6 +242,7 @@ import SwiftUI
             }
             .frame(height: height + (textFocused ? 18 : 0))
             .padding(.vertical, 8)
+            .background(colorScheme == .light ? .white : .black)
         }
     }
 
@@ -261,9 +262,10 @@ import SwiftUI
                                 Spacer()
                             }
 
-                            VStack {
+                            VStack(alignment: .leading) {
                                 Text(message.message)
                                     .foregroundColor(.black)
+                                    .multilineTextAlignment(.leading)
                                     .font(.body)
                                 Spacer(minLength: 0)
                             }
@@ -281,9 +283,10 @@ import SwiftUI
                             Image(systemName: "person.crop.circle")
                             Spacer()
                         }
-                        VStack {
+                        VStack(alignment: .leading) {
                             Text(message.message)
                                 .font(.body)
+                                .multilineTextAlignment(.leading)
                             Spacer(minLength: 0)
                         }
                         .textSelection(.enabled)

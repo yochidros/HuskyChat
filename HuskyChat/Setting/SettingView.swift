@@ -15,7 +15,7 @@ import SwiftUI
     @AppStorage(wrappedValue: 0, "total_token")
     var totalToken: Int
 
-    @AppStorage(wrappedValue: 0.5, "speaker_rare")
+    @AppStorage(wrappedValue: 0.5, "speaker_rate")
     var speakerRate: Double
 
     @AppStorage(wrappedValue: 1.0, "speaker_pitch")
