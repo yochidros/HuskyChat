@@ -98,7 +98,7 @@ let package = Package(
         ),
         .target(
             name: "RecoveryChatFeatureBuilder",
-            dependencies: ["FeatureBuilder"],
+            dependencies: ["FeatureBuilder", "Message"],
             path: "Sources/RecoveryChatFeatureBuilder"
         ),
     ]

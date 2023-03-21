@@ -70,5 +70,5 @@ public struct ChatUsageResponse: Decodable {
 
 public struct ChatMessageChoiceResponse: Decodable {
     public let index: Int
-    let message: ChatMessage
+    public let message: ChatMessage
 }
